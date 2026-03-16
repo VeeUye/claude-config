@@ -9,9 +9,13 @@ Run the full post-development check pipeline. Follow these steps exactly in orde
 
 Run the /simplify skill on the current changes. Apply any improvements it suggests.
 
+If simplify made changes, commit them using `refactor:` or `fix:` as appropriate. Use the same commit message rules from /commit (single-line, imperative, no attribution).
+
 ## Step 2 — Review
 
-Run the @review agent. If any errors are reported, stop and report them. Warnings and suggestions are informational — continue to the next step.
+Run the @review agent. If any errors are reported, fix them and commit using `refactor:` or `fix:` as appropriate.
+
+Warnings and suggestions are informational — continue to the next step.
 
 ## Step 3 — Definition of Done
 
