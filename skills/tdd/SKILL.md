@@ -30,7 +30,11 @@ Write the minimum code to make the failing test pass. No more. Run the test agai
 
 Review the implementation for clarity and simplicity. Refactor if needed, running tests after each change to ensure they still pass.
 
-## Step 5 — Repeat
+## Step 5 — Check and commit
+
+Run /check. If it passes, run /commit to commit this cycle's changes. Each commit should represent one meaningful red-green-refactor cycle.
+
+## Step 6 — Repeat
 
 If there are more behaviours to implement, return to Step 2. Each cycle should be small — one behaviour at a time.
 
