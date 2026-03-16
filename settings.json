@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Glob",
+      "Grep",
+      "Read",
+      "Bash(npm run check-types)",
+      "Bash(npm run lint *)",
+      "Bash(npx eslint *)",
+      "Bash(npx stylelint *)",
+      "Bash(npx jest *)",
+      "Bash(npm test *)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git branch *)",
+      "Bash(npm run build)",
+      "Bash(npm run codegen)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ]
+  },
+  "voiceEnabled": false,
+  "enabledPlugins": {
+    "claude-md-management@claude-plugins-official": true
+  }
+}

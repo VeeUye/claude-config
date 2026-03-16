@@ -1,0 +1,26 @@
+# Auth and machine-specific state
+../claude.json
+
+# Session data
+projects/
+sessions/
+history.jsonl
+
+# Caches
+cache/
+statsig/
+telemetry/
+paste-cache/
+shell-snapshots/
+backups/
+file-history/
+downloads/
+chrome/
+ide/
+session-env/
+todos/
+plans/
+agent-memory/
+
+# Plugins (installed per-machine)
+plugins/
