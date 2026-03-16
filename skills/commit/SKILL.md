@@ -1,13 +1,13 @@
 ---
 name: commit
-description: Run review and DoD checks, then create a git commit using Conventional Commits format
+description: Commit current work, then run checks and commit any cleanup separately
 ---
 
-Create a git commit for the current changes. Follow these steps exactly in order. Do not skip steps.
+Create a git commit for the current changes, then run post-commit checks. Follow these steps exactly in order. Do not skip steps.
 
-## Step 1 — Run checks
+## Step 1 — Run tests and types
 
-Run the /check skill. If any errors or failures are reported, stop and report them. Do not commit.
+Run the @dod agent. If tests or type checking fail, stop and report the failures. Do not commit.
 
 ## Step 2 — Stage files
 
@@ -45,6 +45,10 @@ Write a single-line commit message following Conventional Commits format:
 - Do NOT reference Claude, AI, or any AI tool
 - Pass the message via HEREDOC
 
-## Step 4 — Verify
+## Step 4 — Verify commit
 
 Run `git status` after committing to verify success.
+
+## Step 5 — Post-commit checks
+
+Run /check. Any changes made by simplify or review get their own separate commits as `refactor:` or `fix:`.
