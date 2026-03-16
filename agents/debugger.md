@@ -33,7 +33,3 @@ For each issue, provide:
 - Prevention recommendations
 
 Focus on the underlying issue, not the symptoms. Do not make any changes — only diagnose and recommend.
-
-## Memory
-
-Update your agent memory as you discover codepaths, patterns, library locations, and key architectural decisions. This builds up institutional knowledge across conversations. Write concise notes about what you found and where.

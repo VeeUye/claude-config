@@ -48,25 +48,8 @@ Check every item. Do not skip any.
 - Missing alt text, aria attributes, label associations
 - Non-semantic elements used for interactive controls
 
-### Code style — spacing
-- Blank line between import groups (third-party, then local)
-- Blank line after the last import
-- Blank line between interface/type definitions and code
-- Blank line between groups of related state declarations
-- Blank line between each function/handler definition
-- Blank line between logical sections within JSX
-- No multiple consecutive blank lines
-
-### Code style — naming
-- No abbreviations in variable names, parameters, or callbacks
-- `(number) => number + 1` not `(n) => n + 1`
-- `(item) => item.name` not `(i) => i.name`
-- `(event) => event.target` not `(e) => e.target`
-- Short but descriptive words are fine — just no single letters or abbreviations
-
-### Code style — other
-- No semicolons
-- No trailing commas
+### Code style
+- All spacing and naming rules from global CLAUDE.md
 - Consistency with project patterns (ViewModel Builder, atomic design hierarchy)
 
 ### Performance
@@ -103,6 +86,3 @@ For errors and warnings, include a specific example of how to fix the issue.
 
 Do not make any changes — only report findings.
 
-## Memory
-
-Update your agent memory as you discover codepaths, patterns, library locations, and key architectural decisions. This builds up institutional knowledge across conversations. Write concise notes about what you found and where.

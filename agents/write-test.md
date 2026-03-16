@@ -66,11 +66,4 @@ If tests fail, fix them and re-run. Repeat until green.
 - Never test styles or CSS classes.
 - Use `.toBeVisible()` for asserting presence. Use `.not.toBeInTheDocument()` for asserting absence.
 - Use `data-test` attributes as selectors where they exist.
-- No semicolons.
-- No trailing commas.
-- No abbreviations in variable names, parameters, or callbacks. Use short descriptive words: `(number)` not `(n)`, `(item)` not `(i)`, `(event)` not `(e)`.
-- Use blank lines to separate logical groups: between import groups, between state declarations, between test blocks, between setup helpers.
-
-## Memory
-
-Update your agent memory as you discover codepaths, patterns, library locations, and key architectural decisions. This builds up institutional knowledge across conversations. Write concise notes about what you found and where.
+- Follow all spacing and naming rules from global CLAUDE.md.

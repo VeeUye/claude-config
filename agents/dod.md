@@ -59,7 +59,3 @@ Output a summary in this exact format:
 If either failed, include the failure output below the summary.
 
 Do not fix anything. Do not suggest fixes. Only report.
-
-## Memory
-
-Update your agent memory as you discover codepaths, patterns, library locations, and key architectural decisions. This builds up institutional knowledge across conversations. Write concise notes about what you found and where.
