@@ -1,7 +1,6 @@
 ---
 name: commit
 description: Run review and DoD checks, then create a git commit using Conventional Commits format
-disable-model-invocation: true
 ---
 
 Create a git commit for the current changes. Follow these steps exactly in order. Do not skip steps.

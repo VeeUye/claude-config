@@ -1,7 +1,6 @@
 ---
 name: check
 description: Run simplify, review, and DoD checks on current changes without committing
-disable-model-invocation: true
 ---
 
 Run the full post-development check pipeline. Follow these steps exactly in order. Do not skip steps.
