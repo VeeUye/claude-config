@@ -48,9 +48,9 @@ Check every item. Do not skip any.
 - Missing alt text, aria attributes, label associations
 - Non-semantic elements used for interactive controls
 
-### Code style
-- All spacing and naming rules from global CLAUDE.md
+### Code style (new/changed code only)
 - Consistency with project patterns (ViewModel Builder, atomic design hierarchy)
+- Do not flag linting issues (semicolons, trailing commas, formatting) — filewatchers handle these
 
 ### Performance
 - Unnecessary re-renders (missing memoisation, unstable references in deps)

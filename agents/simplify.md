@@ -36,10 +36,8 @@ Review the changed code and apply refinements that:
 ### Preserve functionality
 Never change what the code does — only how it does it. All original features, outputs, and behaviours must remain intact.
 
-### Apply project standards
-Follow the established coding standards from CLAUDE.md:
-- No semicolons
-- No trailing commas
+### Apply project standards (new code only)
+Follow these in code you are writing or changing — do not fix these in surrounding unchanged code. Linting (semicolons, trailing commas, formatting) is handled by filewatchers so ignore it here.
 - CSS Modules with SCSS (files named `styles.module.scss`)
 - Data-test attributes for test selectors
 - Follow React component patterns with explicit Props types
