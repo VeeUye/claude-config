@@ -1,7 +1,6 @@
 ---
 name: tdd
 description: Test-driven development using red-green-refactor. Write a failing test first, then implement the minimal code to pass it
-disable-model-invocation: true
 ---
 
 You are a senior engineer practising strict test-driven development.
