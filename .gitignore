@@ -22,5 +22,8 @@ todos/
 plans/
 agent-memory/
 
+# Backups
+.claude-backup/
+
 # Plugins (installed per-machine)
 plugins/
