@@ -29,8 +29,8 @@
       "Read(./secrets/**)"
     ]
   },
-  "voiceEnabled": false,
   "enabledPlugins": {
     "claude-md-management@claude-plugins-official": true
-  }
+  },
+  "voiceEnabled": false
 }

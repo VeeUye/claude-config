@@ -5,7 +5,16 @@
 - No semicolons
 - No trailing commas
 - No abbreviations in variable names, parameters, or callbacks. Use short descriptive words: `(number)` not `(n)`, `(item)` not `(i)`, `(event)` not `(e)`
-- Blank line between import groups (third-party, then local)
+- Import ordering (each group separated by a blank line):
+  1. Third-party packages (`react`, `next/*`, `classnames`, `@afs/components/*`)
+  2. Project-level non-component imports (config, local data, contexts)
+  3. Components — ordered by atomic level (atoms → molecules → organisms → templates)
+  4. Constants
+  5. Sibling/local imports (same directory)
+  6. Types
+  7. Assets (SVGs, images)
+  8. Styles (`styles.module.scss` always last)
+- Groups 2–5 form one contiguous block with no blank lines between them
 - Blank line after the last import
 - Blank line between interface/type definitions and code
 - Blank line between groups of related state declarations
