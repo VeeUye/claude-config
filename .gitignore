@@ -22,6 +22,18 @@ todos/
 plans/
 agent-memory/
 
+# Runtime and machine-local state
+daemon/
+daemon.log
+jobs/
+tasks/
+usage-data/
+stats-cache.json
+mcp-needs-auth-cache.json
+.last-cleanup
+.last-update-result.json
+settings.local.json
+
 # Backups
 .claude-backup/
 
