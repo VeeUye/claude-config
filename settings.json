@@ -1,5 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_STREAM_IDLE_TIMEOUT_MS": "900000",
+    "API_TIMEOUT_MS": "1200000"
+  },
   "attribution": {
     "commit": "",
     "pr": ""
@@ -10,6 +14,9 @@
       "Glob",
       "Grep",
       "Read",
+      "Read(/Users/veeuye/Desktop/screenshots/**)",
+      "Bash(grep *)",
+      "Bash(rg *)",
       "Bash(npm run check-types)",
       "Bash(npm run lint *)",
       "Bash(npx eslint *)",
@@ -22,22 +29,88 @@
       "Bash(git branch *)",
       "Bash(npm run build)",
       "Bash(npm run codegen)",
-      "mcp__ide__getDiagnostics"
+      "Bash(touch ~/.claude/state/plannotator-reviewed-*)",
+      "Bash(plannotator review *)",
+      "mcp__ide__getDiagnostics",
+      "Bash(/Users/veeuye/.claude/scripts/localdb-read.sh *)"
     ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",
-      "Read(./secrets/**)"
+      "Read(./secrets/**)",
+      "Bash(security *)",
+      "Bash(docker exec *)",
+      "Bash(docker container exec *)",
+      "Bash(docker compose exec *)",
+      "Bash(docker inspect *)",
+      "Bash(docker container inspect *)",
+      "Bash(docker compose config *)",
+      "Bash(docker cp *)",
+      "Bash(docker container cp *)",
+      "Bash(docker --context *)",
+      "Bash(docker -c *)",
+      "Bash(docker --host *)",
+      "Bash(docker -H *)"
+    ],
+    "ask": [
+      "Bash(/Users/veeuye/.claude/scripts/localdb-write.sh *)"
+    ],
+    "additionalDirectories": [
+      "/Users/veeuye/Desktop/screenshots",
+      "/Users/veeuye/projects/website-front-end",
+      "/Users/veeuye/projects/website-api",
+      "/Users/veeuye/Documents/vee-obsidian-main"
     ]
   },
   "hooks": {
-    "PreToolUse": [
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/gate-plannotator.sh",
+            "statusMessage": "Plannotator review gate"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/mark-plannotator-reviewed.sh"
+          }
+        ]
+      },
       {
         "matcher": "Bash(git commit*)",
         "hooks": [
           {
             "type": "command",
-            "command": "npx prettier --write --check . && npx stylelint --fix '**/*.{css,scss}'",
+            "command": "node ~/tools/sonar-lint/commit-hook.mjs",
+            "statusMessage": "sonar-lint (advisory)"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Task|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/require-plannotator-review.sh",
+            "statusMessage": "Plannotator hard gate"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx lint-staged",
             "statusMessage": "Format and lint before commit"
           }
         ]
@@ -48,6 +121,37 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/block-dangerous-git.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/block-secret-access.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/gate-commit-review.sh",
+            "statusMessage": "Pausing for diff review"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-sound.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-sound.sh",
+            "async": true
           }
         ]
       }
@@ -60,8 +164,56 @@
   "enabledPlugins": {
     "claude-md-management@claude-plugins-official": true
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "theme": "dark",
   "editorMode": "vim",
+  "verbose": false,
+  "preferredNotifChannel": "ghostty",
+  "terminalProgressBarEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": false
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(git push --force*) in ~/projects/website-front-end — CLAUDE.md documents a git-history-rewrite recovery flow (git reset --soft HEAD~1) after codegen sweeps generated files into a commit; force-push after such a rewrite should stay a confirmable action, not auto-approved",
+      "Bash(npx cypress:record*) in acceptance-tests-cypress/ — records to a remote Cypress dashboard; CLAUDE.md flags this nested package as easy to misconfigure (wrong working directory silently downloads a different Cypress major)"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: accommodation-for-students (GitHub org, inferred from origin remote `github.com-vee-afs:accommodation-for-students/website-front-end.git`)",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: Not queryable via gh (org/repo not derivable from origin remote — uses a custom SSH host alias). Remote points to github.com under the `accommodation-for-students` org; assume private per shipped default until confirmed.",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: master (default branch, per repo facts). Protection/rulesets not queryable via gh here — treat as unconfirmed, do not assume unprotected.",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine with open internet",
+      "**Source control**: The trusted repo (website-front-end) and its origin remote on github.com under the accommodation-for-students org only",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: ws.postcoder.com (postcode lookup API, contacted 5× in recent usage); herdr.dev (contacted 1× in recent usage, and `herdr` CLI used 8× in-project and 6× in shell history)",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: .env, .env.local, .env.dev, .env.test, .env.prod, .env.wordpress, acceptance-tests-cypress/cypress.env.json (gitignored env/credential files); pages/property/feed-redirects-prod.json (prod redirect config) — share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (e.g. pages/property/feed-redirects-prod.json, .env.prod); the k8s namespaces observed (`components`, `api`) do not themselves carry a prod marker",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (Next.js/TypeScript frontend work on website-front-end)",
+      "**Trusted repo**: ~/projects/website-front-end (this repo), remote origin on github.com under accommodation-for-students — visibility unconfirmed, treat as private per shipped default",
+      "**Org-specific CLIs**: herdr (used 8× in-project, 6× in shell history) — appears to be an internal/org tool of unclear function; npx and node_modules-prefixed invocations are routine project tooling, not org-specific CLIs",
+      "routine under website-front-end/ prefix: npm/npx script runs (dev, build, test, codegen, storybook), prettier/stylelint/eslint fix commands, and jest test runs as documented in CLAUDE.md's Definition of Done"
+    ]
+  },
+  "voiceEnabled": true,
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  }
 }
