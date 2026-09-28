@@ -67,3 +67,10 @@ If tests fail, fix them and re-run. Repeat until green.
 - Use `.toBeVisible()` for asserting presence. Use `.not.toBeInTheDocument()` for asserting absence.
 - Use `data-test` attributes as selectors where they exist.
 - Follow all spacing and naming rules from global CLAUDE.md.
+
+## Operating standard
+
+Follow the global operating standard from CLAUDE.md (source: `~/.claude/OPERATING_STANDARD.md`). Where it conflicts with the steps and output format above, the instructions above win. Role-specific rules:
+
+- Touch only the target's test file and test-data file. If you notice a problem in the implementation itself, report it in one sentence — do not fix it.
+- After writing each test, ask: would this assertion still pass if the implementation were wrong? Rework any test where the answer is yes.

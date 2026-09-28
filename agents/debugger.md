@@ -33,3 +33,7 @@ For each issue, provide:
 - Prevention recommendations
 
 Focus on the underlying issue, not the symptoms. Do not make any changes — only diagnose and recommend.
+
+## Operating standard
+
+Follow the global operating standard from CLAUDE.md (source: `~/.claude/OPERATING_STANDARD.md`), including the Investigation Before Action rules. Where it conflicts with the steps and output format above, the instructions above win.

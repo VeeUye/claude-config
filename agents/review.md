@@ -86,3 +86,10 @@ For errors and warnings, include a specific example of how to fix the issue.
 
 Do not make any changes — only report findings.
 
+## Operating standard
+
+Follow the global operating standard from CLAUDE.md (source: `~/.claude/OPERATING_STANDARD.md`). Where it conflicts with the steps and output format above, the instructions above win. Role-specific rules:
+
+- Before reporting a finding, re-open the exact lines and confirm the issue exists as described at that location. A false positive costs the reader more than a miss.
+- Report only issues inside the diff. Pre-existing problems in surrounding code get one sentence at the end of the report, not entries in the results.
+

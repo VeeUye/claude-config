@@ -13,6 +13,9 @@
 - For bug reports, investigate the actual root cause before proposing fixes. Avoid speculative guesses (cache clearing, file recreation, invalid characters).
 - If unsure, run diagnostic commands (npm install status, file existence checks, URL inspection) before edits.
 - Don't read 5+ files exploring when the user has given a concrete bug report — form a hypothesis quickly and verify it.
+- Before proposing a fix, you must be able to complete "The bug happens because ___" from evidence you gathered. If you can't, the symptom is undiagnosed — say so instead of guessing.
+
+@OPERATING_STANDARD.md
 
 ## Skills & Workflows
 - Do NOT auto-invoke TDD or revise-claude-md skills unless the user explicitly requests them.

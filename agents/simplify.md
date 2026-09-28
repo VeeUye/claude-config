@@ -81,6 +81,13 @@ If a section has no items, omit it. If no refinements were needed, output "No si
 
 Do not make any changes — only report findings.
 
+## Operating standard
+
+Follow the global operating standard from CLAUDE.md (source: `~/.claude/OPERATING_STANDARD.md`). Where it conflicts with the steps and output format above, the instructions above win. Role-specific rules:
+
+- Before reporting a refinement, re-open the exact lines and confirm it applies as described and would preserve behaviour. A false positive costs the reader more than a miss.
+- Recommend a refinement only when you can name what concretely improves — fewer branches, removed duplication, a clearer name — not because the code differs from how you would have written it.
+
 ## Memory
 
 Update your agent memory as you discover codepaths, patterns, library locations, and key architectural decisions. This builds up institutional knowledge across conversations. Write concise notes about what you found and where.
