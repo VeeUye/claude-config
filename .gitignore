@@ -39,3 +39,17 @@ settings.local.json
 
 # Plugins (installed per-machine)
 plugins/
+
+# Hook state and local toggles
+state/
+notify-sound.disabled
+
+# App-managed policy, remote settings and sync caches
+policy-limits.json
+policy-limits.json.stamp.json
+remote-settings.json
+skills/synced/
+
+# Update backups and feedback drafts
+.last-update-result.json.bak
+feedback/
