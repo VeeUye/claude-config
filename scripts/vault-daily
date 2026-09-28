@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Print the path of today's daily note, creating it if it's missing.
+# Usage: vault-daily <work|personal>
+# The note is written in one go with the same static content as the Templater
+# template, so Templater (which only fills empty new notes) leaves it alone.
+# Keep the content in sync with Templates/Daily Note.md and Templates/Personal Daily Note.md.
+
+set -euo pipefail
+
+export LC_ALL=en_GB.UTF-8
+
+side="${1:-}"
+
+if ! vault=$(cd -P "$HOME/vault" 2>/dev/null && pwd); then
+  echo "vault-daily: $HOME/vault is missing. Create the ~/vault shortcut first." >&2
+  exit 1
+fi
+
+today=$(date +%Y-%m-%d)
+yesterday=$(date -v-1d +%Y-%m-%d)
+tomorrow=$(date -v+1d +%Y-%m-%d)
+heading=$(date "+%A %-d %B %Y")
+
+case "$side" in
+  work)
+    folder="$vault/Daily"
+    note="$folder/$today.md"
+    head="# $heading
+
+[[$yesterday|← Yesterday]] | [[Tasks Dashboard]] | [[$tomorrow|Tomorrow →]]"
+    ;;
+  personal)
+    folder="$vault/_Personal/Daily"
+    note="$folder/$today-personal.md"
+    head="# Personal: $heading
+
+[[$yesterday-personal|← Yesterday]] | [[$tomorrow-personal|Tomorrow →]]"
+    ;;
+  *)
+    echo "usage: vault-daily <work|personal>" >&2
+    exit 2
+    ;;
+esac
+
+if [ ! -e "$note" ]; then
+  mkdir -p "$folder"
+  draft=$(mktemp "$folder/.vault-daily.XXXXXX")
+  trap 'rm -f "$draft"' EXIT
+  printf '%s\n\n## 📝 Log\n\n## 🧠 Notes & ideas\n' "$head" > "$draft"
+  chmod 644 "$draft"
+  # link(2) fails if the note already exists, so a note created in the meantime wins
+  ln "$draft" "$note" 2>/dev/null || true
+fi
+
+echo "$note"
