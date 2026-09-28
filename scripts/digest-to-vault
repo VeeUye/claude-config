@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+# Copy the Daily Digest from Google Drive into the vault (personal Mac).
+#
+# For every digest-YYYY-MM-DD.json that is new or has changed since it was
+# last processed (so days the Mac was off are caught up):
+#   - new items become tasks in _Personal/Email tasks/YYYY-MM-DD.md, one file
+#     per day, skipping message ids already written
+# Then _Personal/Today.md is overwritten with the latest brief, plus a
+# "since you were last here" list when several days were caught up.
+#
+# State lives in ~/Library/Application Support/vault-digest (not synced).
+# Log: ~/Library/Logs/vault-digest.log
+# DIGEST_DIR overrides the Drive folder (for testing).
+
+set -euo pipefail
+
+export LC_ALL=en_GB.UTF-8
+
+log_file="$HOME/Library/Logs/vault-digest.log"
+state_dir="$HOME/Library/Application Support/vault-digest"
+processed_file="$state_dir/processed"
+seen_file="$state_dir/seen-message-ids"
+
+mkdir -p "$state_dir" "$(dirname "$log_file")"
+touch "$processed_file" "$seen_file"
+
+log() {
+  printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >> "$log_file"
+}
+
+fail() {
+  log "ERROR $*"
+  echo "digest-to-vault: $*" >&2
+  exit 1
+}
+
+command -v jq >/dev/null || fail "jq not found on PATH ($PATH)"
+
+vault=$(cd -P "$HOME/vault" 2>/dev/null && pwd) || fail "$HOME/vault is missing. Create the ~/vault shortcut first."
+
+shopt -s nullglob
+
+if [ -n "${DIGEST_DIR:-}" ]; then
+  digest_dir="$DIGEST_DIR"
+else
+  candidates=("$HOME"/Library/CloudStorage/GoogleDrive-*/"My Drive/Daily Digests")
+  [ ${#candidates[@]} -eq 1 ] || fail "expected one Google Drive 'Daily Digests' folder, found ${#candidates[@]}"
+  digest_dir="${candidates[0]}"
+fi
+[ -d "$digest_dir" ] || fail "digest folder not found: $digest_dir"
+
+tasks_dir="$vault/_Personal/Email tasks"
+today_note="$vault/_Personal/Today.md"
+
+# Turns digest items that aren't in $seen into "message_id<TAB>task line".
+# Text is cleaned so a subject can't add tags, links, Tasks-plugin signifiers
+# or line breaks to the task.
+read -r -d '' task_program <<'JQ' || true
+def clean: tostring
+  | gsub("[\r\n\t]+"; " ")
+  | gsub("#"; "＃")
+  | gsub("[\\[\\]]"; "")
+  | gsub("[📅⏳🛫➕✅❌⏫🔼🔽🔺⏬🔁🆔⛔]"; "")
+  | gsub(" {2,}"; " ")
+  | ltrimstr(" ") | rtrimstr(" ");
+
+def priority:
+  if .section == "money" and ((.title // "") | test("fail|declin|overdue|final notice|unpaid"; "i")) then "⏫"
+  elif .section == "waiting" then "🔽"
+  else "🔼" end;
+
+($seen | split("\n") | map(select(length > 0) | {(.): true}) | add // {}) as $known
+| .items[]
+| select(.message_id != null and ($known[.message_id] | not))
+| [ .message_id,
+    ( "- [ ] "
+      + (if .section == "waiting"
+           then "Reply to " + (.sender | clean) + ": " + (.title | clean)
+           else (.sender | clean) + " — " + (.title | clean) end)
+      + (if .amount then " " + (.amount | clean) else "" end)
+      + (if .check then " (check: " + (.check | clean) + ")" else "" end)
+      + (if (.link // "" | test("^https://mail\\.google\\.com/[^ ()]*$")) then " [open](" + .link + ")" else "" end)
+      + " " + priority
+      + (if (.due // "" | test("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) then " 📅 " + .due else "" end) ) ]
+| join("\t")
+JQ
+
+pending=()
+for json in "$digest_dir"/digest-*.json; do
+  name=$(basename "$json")
+  [[ $name =~ ^digest-[0-9]{4}-[0-9]{2}-[0-9]{2}\.json$ ]] || continue
+  sha=$(shasum -a 256 "$json" | cut -d' ' -f1)
+  grep -qxF "$name $sha" "$processed_file" && continue
+  pending+=("$json|$sha")
+done
+
+if [ ${#pending[@]} -eq 0 ]; then
+  log "nothing new"
+  exit 0
+fi
+
+mkdir -p "$tasks_dir"
+summary=()
+total=0
+
+for entry in "${pending[@]}"; do
+  json="${entry%|*}"
+  sha="${entry##*|}"
+  name=$(basename "$json")
+  date="${name#digest-}"
+  date="${date%.json}"
+
+  jq -e '.items | type == "array"' "$json" >/dev/null 2>&1 || fail "$name is not a readable digest"
+  lines=$(jq -r --rawfile seen "$seen_file" "$task_program" "$json") || fail "could not read items from $name"
+
+  count=0
+  if [ -n "$lines" ]; then
+    tasks_file="$tasks_dir/$date.md"
+    [ -e "$tasks_file" ] || printf '# Email tasks — %s\n\n' "$date" > "$tasks_file"
+    while IFS=$'\t' read -r message_id task; do
+      printf '%s\n' "$task" >> "$tasks_file"
+      printf '%s\n' "$message_id" >> "$seen_file"
+      count=$((count + 1))
+    done <<< "$lines"
+  fi
+
+  # Replace any older record of this file, then record this version.
+  grep -v "^$name " "$processed_file" > "$processed_file.tmp" || true
+  printf '%s %s\n' "$name" "$sha" >> "$processed_file.tmp"
+  mv "$processed_file.tmp" "$processed_file"
+
+  summary+=("$date|$count")
+  total=$((total + count))
+  log "processed $name: $count new task(s)"
+done
+
+# The latest brief on Drive, whether or not it was processed this run.
+latest_markdown=""
+for markdown in "$digest_dir"/digest-*.md; do
+  [[ $(basename "$markdown") =~ ^digest-[0-9]{4}-[0-9]{2}-[0-9]{2}\.md$ ]] && latest_markdown="$markdown"
+done
+[ -n "$latest_markdown" ] || fail "no digest-*.md found in $digest_dir"
+
+latest_date=$(basename "$latest_markdown" .md)
+latest_date="${latest_date#digest-}"
+
+draft=$(mktemp "$vault/_Personal/.today.XXXXXX")
+trap 'rm -f "$draft"' EXIT
+{
+  if [ "$latest_date" != "$(date +%Y-%m-%d)" ]; then
+    printf '> [!warning] No brief for today yet. This is the latest one, from %s.\n\n' "$latest_date"
+  fi
+  if [ ${#summary[@]} -gt 1 ]; then
+    printf '> [!info] Since you were last here\n'
+    for item in "${summary[@]}"; do
+      printf '> - [[_Personal/Email tasks/%s|%s]] — %s new task(s)\n' "${item%|*}" "${item%|*}" "${item#*|}"
+    done
+    printf '\n'
+  fi
+  cat "$latest_markdown"
+} > "$draft"
+chmod 644 "$draft"
+mv "$draft" "$today_note"
+
+date '+%Y-%m-%d %H:%M:%S' > "$state_dir/last-success"
+log "done: ${#summary[@]} digest(s), $total new task(s), Today.md from $latest_date"
