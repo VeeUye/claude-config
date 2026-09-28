@@ -4,7 +4,7 @@ description: Compact the current conversation into a handoff document for anothe
 argument-hint: What will the next session be used for?
 ---
 
-Write a handoff document summarising the current conversation so a fresh agent can continue the work. Save to ~/Documents/vee-obsidian-main/Reports/ with a filename in the format `handoff-YYYY-MM-DD-<slug>.md` where the slug is a 2–3 word kebab-case summary of the session topic.
+Write a handoff document summarising the current conversation so a fresh agent can continue the work. Save to ~/Documents/vee-obsidian-main/Reports/Handoffs/ with a filename in the format `handoff-YYYY-MM-DD-<slug>.md` where the slug is a 2–3 word kebab-case summary of the session topic.
 
 Include a "suggested skills" section in the document, which suggests skills that the agent should invoke.
 
