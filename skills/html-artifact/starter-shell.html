@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><!-- artifact title --></title>
+<style>
+  :root {
+    color-scheme: light dark;
+
+    /* Type */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --text-xs: .75rem; --text-sm: .8125rem; --text-base: .9375rem;
+    --text-lg: 1.0625rem; --text-xl: 1.375rem; --text-2xl: 1.9rem;
+    --leading: 1.6; --leading-tight: 1.25;
+
+    /* Spacing (4px base) + radius */
+    --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem;
+    --space-5: 1.5rem; --space-6: 2rem; --space-7: 3rem;
+    --radius-sm: 6px; --radius: 10px; --radius-lg: 14px; --radius-full: 999px;
+
+    /* Motion */
+    --ease: cubic-bezier(.4, 0, .2, 1); --ease-out: cubic-bezier(.16, 1, .3, 1);
+    --dur: .18s; --dur-slow: .4s;
+
+    /* Light theme — Anthropic palette: ivory paper, white cards, clay accent */
+    --bg: #faf9f5; --surface: #ffffff; --surface-2: #f0eee6;
+    --fg: #141413; --muted: #3d3d3a; --faint: #87867f;
+    --accent: #d97757; --accent-fg: #ffffff; --accent-soft: rgba(217, 119, 87, .12);
+    --border: #e3dacc; --border-strong: #d1cfc5;
+    --positive: #788c5d; --positive-soft: rgba(120, 140, 93, .12);
+    --negative: #b04a3f; --negative-soft: rgba(176, 74, 63, .10);
+    --shadow-sm: 0 1px 2px rgba(20, 20, 19, .04), 0 1px 3px rgba(20, 20, 19, .05);
+    --shadow-md: 0 2px 6px rgba(20, 20, 19, .05), 0 10px 28px rgba(20, 20, 19, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1b18; --surface: #24231f; --surface-2: #2c2b26;
+      --fg: #ece9e1; --muted: #c4c1b6; --faint: #908d83;
+      --accent: #e08a6a; --accent-fg: #1c1206; --accent-soft: rgba(224, 138, 106, .16);
+      --border: #38362f; --border-strong: #4a473f;
+      --positive: #9bae7c; --positive-soft: rgba(155, 174, 124, .15);
+      --negative: #cf7068; --negative-soft: rgba(207, 112, 104, .15);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+      --shadow-md: 0 8px 28px rgba(0, 0, 0, .45);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--font-sans); font-size: var(--text-base); line-height: var(--leading);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  main { max-width: 880px; margin: 0 auto; padding: var(--space-7) var(--space-5) 5rem; }
+  h1 {
+    font-family: var(--font-serif); font-size: var(--text-2xl); line-height: var(--leading-tight);
+    letter-spacing: -.01em; font-weight: 600; margin: 0 0 var(--space-2);
+  }
+  /* Eyebrow section label — monospace, the Anthropic-docs tell */
+  .eyebrow {
+    font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase;
+    letter-spacing: .08em; color: var(--faint); margin: 0 0 var(--space-3);
+  }
+  /* Lifted card surface */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: var(--space-4) var(--space-5);
+  }
+  code { font-family: var(--font-mono); background: var(--surface-2); padding: .08rem .35rem; border-radius: var(--radius-sm); font-size: .85em; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  footer { color: var(--muted); font-size: var(--text-sm); border-top: 1px solid var(--border); margin-top: var(--space-7); padding-top: var(--space-4); }
+  footer code { background: none; padding: 0; }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+  @media print {
+    .controls, .tabs { display: none; }
+    body { background: #fff; color: #000; }
+    .card { box-shadow: none; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <!-- content -->
+  <footer>
+    Generated from <code><!-- source --></code> as of <!-- date -->.
+    Regenerate with <code><!-- how --></code>. Snapshot — not live.
+  </footer>
+</main>
+<script>
+  const DATA = /* baked-in snapshot literal */ {}
+  // vanilla rendering / interaction only
+</script>
+</body>
+</html>
